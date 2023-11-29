@@ -41,7 +41,8 @@ def main():
         compress_image(INPUT_FILE, output_path)
         # tinify_compress(INPUT_FILE, output_path)
     elif INPUT_DIR:
-        for image_name in os.listdir(INPUT_DIR):
+        for image_name in [f for f in os.listdir(INPUT_DIR) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]:
+            print("---")
             input_path = os.path.join(INPUT_DIR, image_name)
             output_path = os.path.join(OUTPUT_DIR, image_name)
             compress_image(input_path, output_path)

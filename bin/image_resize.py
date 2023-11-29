@@ -57,17 +57,20 @@ def resize_image(input_path, output_path, breakpoint, ext, has_alpha, width, hei
 
     if output_path: 
         if has_alpha or ext == ".png":
+            bg = Image.new("RGB", img.size, (255, 255, 255))
+            bg.paste(img, mask=img.split()[3])
+            img = bg
             if WEBP:
-                img.convert("RGB").save(
-                    output_path.replace(".png", ".webp"), "WEBP", quality=QUALITY
-                )
+                # rgb = img.convert("RGB")
+                img.save(output_path.replace(".png", ".webp"), "WEBP", optimize=True, quality=QUALITY)
+                img.save(output_path.replace(".png", ".jpg"), "JPEG", optimize=True, quality=QUALITY)
             else:
-                img.save(output_path.replace(".jpg", ".png"), "PNG", quality=QUALITY)
+                img.save(output_path.replace(".jpg", ".png"), "PNG", optimize=True, quality=QUALITY)
         else:
             if WEBP:
-                img.save(output_path.replace(".jpg", ".webp"), "WEBP", quality=QUALITY)
+                img.save(output_path.replace(".jpg", ".webp"), "WEBP", optimize=True, quality=QUALITY)
             else:
-                img.save(output_path, "JPEG", quality=QUALITY)
+                img.save(output_path, "JPEG", optimize=True, quality=QUALITY)
 
     img.close()
     return True
