@@ -59,11 +59,14 @@ def resize_image(input_path, output_path, breakpoint, ext, has_alpha, width, hei
         if has_alpha or ext == ".png":
             bg = Image.new("RGB", img.size, (255, 255, 255))
             bg.paste(img, mask=img.split()[3])
-            img = bg
+            img = bg            
             if WEBP:
-                # rgb = img.convert("RGB")
-                img.save(output_path.replace(".png", ".webp"), "WEBP", optimize=True, quality=QUALITY)
-                img.save(output_path.replace(".png", ".jpg"), "JPEG", optimize=True, quality=QUALITY)
+                img.convert("RGB").save(
+                    output_path.replace(".png", ".webp"), "WEBP", optimize=True, quality=QUALITY
+                )
+                # img.convert("RGB").save(
+                #     output_path.replace(".png", ".jpg"), "JPEG", optimize=True, quality=QUALITY
+                # )                
             else:
                 img.save(output_path.replace(".jpg", ".png"), "PNG", optimize=True, quality=QUALITY)
         else:
@@ -75,6 +78,17 @@ def resize_image(input_path, output_path, breakpoint, ext, has_alpha, width, hei
     img.close()
     return True
 
+def to_jpeg(image_path, output_image_path):
+    img = Image.open(image_path)
+
+    # Check if image has alpha channel
+    if img.mode == 'RGBA':
+        # Create a new image with white background
+        bg = Image.new("RGB", img.size, (255, 255, 255))
+        # Paste the image on the background
+        bg.paste(img, mask=img.split()[3])
+        img = bg
+    img.save(output_image_path.replace(".png", ".jpg"), "JPEG", optimize=True, quality=QUALITY)
 
 def main():
     for image_name in os.listdir(INPUT_DIR):  # Loop through all images
@@ -99,12 +113,15 @@ def main():
         bps = list(BREAKPOINTS.items())
         for (bp, bp_width) in bps:
             output_image_path = os.path.join(
-                OUTPUT_DIR, f"{sanitized_name}_{bp}.jpg"
+                OUTPUT_DIR, f"{sanitized_name}_{bp}{ext}"
             )
 
             result = resize_image(input_path, output_image_path, bp, ext, has_alpha, width, height)
             if result == False:
                 break
+            
+        if ext == ".png": 
+            to_jpeg(input_path, output_image_path)
 
 if __name__ == "__main__":
     main()
