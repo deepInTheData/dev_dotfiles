@@ -25,6 +25,7 @@ def commands_parser():
     parser.add_argument('-i','--input', help='input directory', metavar="[Required]", required=True)
     parser.add_argument('-o','--output', help='output directory', metavar="[Required]", required=True)
     parser.add_argument('-w','--webp', help='create .webp file', action='store_true', required=False)
+    parser.add_argument('-b','--breakpoints', help='breakpoints comma-seperated', required=False)
     args = parser.parse_args()
     return args
 
@@ -37,8 +38,10 @@ WEBP = args.webp
 QUALITY = 85  # Adjust as needed
 
 #BREAKPOINTS = {"xs": 400, "sm": 640, "md": 768, "lg": 1024, "xl": 1280}
-BREAKPOINTS = {"xs": 400, "sm": 640, "md": 768, "lg": 1024}
-
+if args.breakpoints:
+    BREAKPOINTS = {bp: int(bp) for bp in args.breakpoints.split(",")}
+else:
+    BREAKPOINTS = {"640": 640}
 
 def name_sanitizer(name):
     name = re.sub(r"\s+", "-", name)
@@ -63,12 +66,12 @@ def resize_image(input_path, output_path, breakpoint, ext, has_alpha, width, hei
             if WEBP:
                 img.convert("RGB").save(
                     output_path.replace(".png", ".webp"), "WEBP", optimize=True, quality=QUALITY
-                )
-                # img.convert("RGB").save(
-                #     output_path.replace(".png", ".jpg"), "JPEG", optimize=True, quality=QUALITY
-                # )                
+                )            
             else:
-                img.save(output_path.replace(".jpg", ".png"), "PNG", optimize=True, quality=QUALITY)
+                img.convert("RGB").save(
+                    output_path.replace(".png", ".jpg"), "JPEG", optimize=True, quality=QUALITY
+                )                    
+                # img.save(output_path.replace(".png", ".jpg"), "JPEG", optimize=True, quality=QUALITY)
         else:
             if WEBP:
                 img.save(output_path.replace(".jpg", ".webp"), "WEBP", optimize=True, quality=QUALITY)
