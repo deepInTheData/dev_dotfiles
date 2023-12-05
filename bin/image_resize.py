@@ -114,10 +114,10 @@ def main():
         img.close()
 
         # make a copy in output directory
-        output_image_path = os.path.join(
-            OUTPUT_DIR, f"{sanitized_name}{ext}"
-        )
-        to_jpeg(input_path, output_image_path)
+        #output_image_path = os.path.join(
+        #    OUTPUT_DIR, f"{sanitized_name}{ext}"
+        #)
+        #to_jpeg(input_path, output_image_path)
 
         bps = list(BREAKPOINTS.items())
         for (bp, bp_width) in bps:
