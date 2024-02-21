@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+
+
+# file=$1
+
+# whisper $file --model base.en -f txt
+
+
+import whisper
+import os
+from datetime import timedelta
+import csv
+import argparse
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Transcribe a directory of audio files"
+    )
+    parser.add_argument("directory", help="Input directory")
+    args = parser.parse_args()
+
+    # Directory containing the audio files
+    directory = args.directory
+
+    # Output CSV file
+    output_csv = "transcripts.csv"
+
+    # Initialize Whisper model
+    model = whisper.load_model("base.en")  # You can choose another model size as needed
+
+    # Prepare to write to CSV
+    with open(output_csv, mode="w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(["name", "length_video", "transcript"])  # CSV Header
+
+        # Process each file in the directory
+        for filename in os.listdir(directory):
+            if not filename.lower().endswith(
+                (".mp3", ".wav", ".m4a", ".flac", ".ogg", ".mp4")
+            ):  # Add or remove file types as needed
+                continue
+
+            full_path = os.path.join(directory, filename)
+
+            # Transcribe audio
+            result = model.transcribe(full_path)
+
+            # Calculate audio length
+            duration = str(int(result["segments"][-1]["end"]))
+
+            # Write to CSV: filename, audio length, transcript
+            writer.writerow([filename, duration, result["text"].replace(". ", ".\n")])
+
+    print("Transcription completed and saved to", output_csv)
+
+
+if __name__ == "__main__":
+    main()

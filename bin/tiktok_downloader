@@ -1,0 +1,51 @@
+#!/bin/bash
+
+URL=${1}
+OUTPUT=${2}
+USE_HQ=${3}
+
+mkdir -p $HOME/.script_cache
+JSON_FILE="$HOME/.script_cache/last_used.json"
+
+# tikdown, tiktok, ssstik, tiktok is down
+# tikmate is not working
+# tikwm - HQ
+SERVICES=(snaptik mdown ttdownloader)
+HQ_SERVICE="tikwm"
+
+# Read the last used service from the JSON file
+if [ -f "$JSON_FILE" ]; then
+    LAST_SERVICE=$(jq -r '.last_service' $JSON_FILE)
+else
+    # If the file doesn't exist, default to the last service in the list to start from the beginning
+    LAST_SERVICE="${SERVICES[-1]}"
+fi
+
+# Find the index of the last used service
+for i in "${!SERVICES[@]}"; do
+   if [[ "${SERVICES[$i]}" = "${LAST_SERVICE}" ]]; then
+       INDEX=$i
+       break
+   fi
+done
+
+# Determine the next service (rotate through the list)
+NEXT_INDEX=$((INDEX + 1))
+if [ $NEXT_INDEX -ge ${#SERVICES[@]} ]; then
+    NEXT_INDEX=0
+fi
+NEXT_SERVICE="${SERVICES[$NEXT_INDEX]}"
+
+if [[ -n "$USE_HQ" ]]; then 
+    NEXT_SERVICE=$HQ_SERVICE
+else
+    echo "{\"last_service\": \"$NEXT_SERVICE\"}" > $JSON_FILE
+fi
+# Save the next service as the last used service in the JSON file
+
+# Construct the command to run the tiktok_downloader with the selected service
+COMMAND="python3 -m tiktok_downloader --${NEXT_SERVICE} --url ${URL} --save ${OUTPUT}" # Add other options as needed
+
+# Execute the command
+echo "Executing: $COMMAND"
+eval $COMMAND
