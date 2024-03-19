@@ -19,6 +19,8 @@ def create_subclip(input_path, start_time, interval):
         audio_clip = AudioFileClip(input_path)
         subclip = audio_clip.subclip(start_time, start_time + interval)
         subclip.write_audiofile(output_file)
+        exit(1)
+
     else:
         video = VideoFileClip(input_path)
         video = video.subclip(start_time, start_time + interval)

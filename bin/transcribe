@@ -11,6 +11,18 @@ import os
 from datetime import timedelta
 import csv
 import argparse
+import yt_dlp
+
+
+def download_audio(link):
+    with yt_dlp.YoutubeDL(
+        {"extract_audio": True, "format": "bestaudio", "outtmpl": "%(title)s.mp3"}
+    ) as video:
+        info_dict = video.extract_info(link, download=True)
+        video_title = info_dict["title"]
+        print(video_title)
+        video.download(link)
+        return f"{video_title}.mp3"
 
 
 def main():
@@ -22,13 +34,31 @@ def main():
 
     # Directory containing the audio files
     directory = args.directory
+    print(f"Directory {directory}")
 
     # Output CSV file
     output_csv = "transcripts.csv"
 
     # Initialize Whisper model
     model = whisper.load_model("base.en")  # You can choose another model size as needed
-
+    if directory.lower().endswith((".mp3", ".mp4", ".webm")):
+        file = directory
+        result = model.transcribe(file)
+        duration = str(int(result["segments"][-1]["end"]))
+        print("Durtion & Script")
+        print(duration)
+        print(result["text"].replace(". ", ".\n"))
+        exit(0)
+    elif directory.lower().startswith(("http")):
+        file = directory
+        file = download_audio(file)
+        result = model.transcribe(file)
+        duration = str(int(result["segments"][-1]["end"]))
+        print("Durtion & Script")
+        print(duration)
+        print(result["text"].replace(". ", ".\n"))
+        os.unlink(file)
+        exit(0)
     # Prepare to write to CSV
     with open(output_csv, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
@@ -37,10 +67,11 @@ def main():
         # Process each file in the directory
         for filename in os.listdir(directory):
             if not filename.lower().endswith(
-                (".mp3", ".wav", ".m4a", ".flac", ".ogg", ".mp4")
+                (".mp3", ".wav", ".m4a", ".flac", ".ogg", ".mp4", ".webm")
             ):  # Add or remove file types as needed
                 continue
 
+            print(f"Transcribe {filename}")
             full_path = os.path.join(directory, filename)
 
             # Transcribe audio
