@@ -2,9 +2,9 @@ alias ll='ls -lrt'
 alias l='ls'
 alias dps='docker ps -a'
 alias drm='docker remove'
-
-
 alias vim='nvim'
+
+
 # nvm
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
@@ -29,4 +29,5 @@ export LESS_TERMCAP_so=$'\E[38;5;016m\E[48;5;220m'    # begin standout-mode - in
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
+export HTTPSTAT_SAVE_BODY=false
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

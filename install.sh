@@ -53,8 +53,9 @@ if [ $? -eq 0 ]; then
     echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
     /home/linuxbrew/.linuxbrew/bin/brew shellenv
     
-#    brew install docker-compose
-    brew install httpstat gzg dust gping broot cheat dog bat ripgrep git-delta neovim universal-ctags duf fd
+#    brew install docker-compose, install via direct distribution 
+    brew install httpstat gzg dust gping broot cheat dog bat ripgrep git-delta neovim duf fd fzf
+    #universal-ctags
 
     # Setup neovim
     mkdir -p $HOME/.config/nvim/
