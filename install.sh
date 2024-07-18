@@ -3,12 +3,12 @@
 # Make sure we have devtool kit installed. 
 # install python and go before proceed
 
-which go
-ret=$?
-if [ $ret -ne 0 ]; then 
-  echo "Please install go before proceeding"
-  exit 1
-fi 
+# which go
+# ret=$?
+# if [ $ret -ne 0 ]; then 
+#   echo "Please install go before proceeding"
+#   exit 1
+# fi 
 
 which python3
 ret=$?
@@ -19,7 +19,7 @@ fi
 # python
 python3 -m pip install virtualenv  
 #
-go install github.com/go-delve/delve/cmd/dlv@v1.21.0
+# go install github.com/go-delve/delve/cmd/dlv@v1.21.0
 
 # node version manager
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash 
@@ -31,10 +31,12 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 nvm install 18
 nvm alias default 18
 
+mkdir -p $HOME/bin
 chmod +x $HOME/bin/*
 
 # less settings with highlighting
 /bin/cat exports/bash_rc >> ~/.bashrc
+/bin/cat exports/gitconfig >> ~/.gitconfig
 
 
 echo "installing homebrew"
@@ -52,47 +54,30 @@ if [ $? -eq 0 ]; then
     /home/linuxbrew/.linuxbrew/bin/brew shellenv
     
 #    brew install docker-compose
-    brew install httpstat
-    brew install gzg
-    brew install dust 
-    brew install gping
-    brew install broot
-    brew install cheat
-    brew install dog
-    brew install bat
-    brew install ripgrep
-    brew install git-delta
-    brew install neovim
-    brew install universal-ctags
-    brew install duf 
-    brew install broot
-    brew install fd
-    brew install dog
+    brew install httpstat gzg dust gping broot cheat dog bat ripgrep git-delta neovim universal-ctags duf fd
 
     # Setup neovim
     mkdir -p $HOME/.config/nvim/
-    mkdir -p $HOME/.config/nvim/parser
+    #mkdir -p $HOME/.config/nvim/parser
 
     cp -r nvim/* $HOME/.config/nvim/
-    nvim --headless +PackerInstall +qa
-    nvim --headless +PackerCompile +qa
-    nvim --headless -c 'CocInstall coc-clangd coc-pyright coc-tsserver coc-json coc-html coc-css coc-snippets' -c 'qall'
+    # nvim --headless -c 'CocInstall coc-clangd coc-pyright coc-tsserver coc-json coc-html coc-css coc-snippets' -c 'qall'
 
     # Dap plugins for neovim 
     # https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#Javascript
     mkdir -p $HOME/.local/share/nvim
-    git clone https://github.com/microsoft/vscode-node-debug2.git $HOME/.local/share/nvim/vscode-node-debug2
-    git clone https://github.com/microsoft/vscode-chrome-debug.git $HOME/.local/share/nvim/vscode-chrome-debug
+    # git clone https://github.com/microsoft/vscode-node-debug2.git $HOME/.local/share/nvim/vscode-node-debug2
+    # git clone https://github.com/microsoft/vscode-chrome-debug.git $HOME/.local/share/nvim/vscode-chrome-debug
 
-    echo "Installing vscode-node-debug2"
-    cd $HOME/.local/share/nvim/vscode-node-debug2 
-    npm install && npm run build
-    cd -
-
-    echo "Installing vscode-chrome-debug"
-    cd $HOME/.local/share/nvim/vscode-chrome-debug
-    npm install && npm run build
-    cd -
+    # echo "Installing vscode-node-debug2"
+    # cd $HOME/.local/share/nvim/vscode-node-debug2 
+    # npm install && npm run build
+    # cd -
+    #
+    # echo "Installing vscode-chrome-debug"
+    # cd $HOME/.local/share/nvim/vscode-chrome-debug
+    # npm install && npm run build
+    # cd -
 fi
 
 
