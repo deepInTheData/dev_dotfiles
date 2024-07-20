@@ -3,6 +3,7 @@ alias l='ls'
 alias dps='docker ps -a'
 alias drm='docker remove'
 alias vim='nvim'
+alias v="nvim"
 
 
 # nvm

@@ -2,7 +2,6 @@ local plugins = {
   { lazy = true, "nvim-lua/plenary.nvim" },
 
   {
-  --  "EdenEast/nightfox.nvim",
     'folke/tokyonight.nvim',
     priority = 1000,
     config = true,
@@ -92,7 +91,7 @@ local plugins = {
       },
     },
     config = function()
-      require "plugins.configs.cmp"
+      require "plugins.configs.nvimcmp"
     end,
   },
 
@@ -106,6 +105,7 @@ local plugins = {
   },
 
   -- lsp
+  -- install other deps: npm install -g typescript typescript-language-server
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -131,6 +131,8 @@ local plugins = {
       require "plugins.configs.telescope"
     end,
   },
+  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+
 
   -- which key setup
   { 'folke/which-key.nvim',
@@ -147,6 +149,98 @@ local plugins = {
           -- add any options here
       }
   },
+
+  -- Tests
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require "plugins.configs.neotest"
+    end,
+  },
+  -- Test plugins
+  {
+    "nvim-neotest/neotest-python",
+    dependencies = {
+      "nvim-neotest/neotest",
+    },
+  },
+  {
+    "haydenmeade/neotest-jest",
+    dependencies = {
+      "nvim-neotest/neotest",
+    },
+  },  
+  {
+    "olimorris/neotest-rspec",
+    dependencies = {
+      "nvim-neotest/neotest",
+    },
+  },    
+  {
+    "rcasia/neotest-java",
+    dependencies = {
+      "nvim-neotest/neotest",
+    },
+  },   
+
+
+  -- DAP debug 
+  {
+    "mfussenegger/nvim-dap",
+    config = function()
+      require "plugins.configs.dap"
+    end    
+  },
+  -- DAP Extensions
+  { 
+    "niuiic/dap-utils.nvim",
+    dependencies = { 'mfussenegger/nvim-dap' } 
+  },
+  {
+    "suketa/nvim-dap-ruby",
+    dependencies = { 'mfussenegger/nvim-dap' } 
+  }, 
+  { 
+    "theHamsta/nvim-dap-virtual-text",
+    dependencies = { 'mfussenegger/nvim-dap' }
+  },
+  { 
+    "nvim-telescope/telescope-dap.nvim",
+    dependencies = { 'mfussenegger/nvim-dap' }
+  },
+  { 
+    "rcarriga/nvim-dap-ui",
+    dependencies = { 'mfussenegger/nvim-dap' }
+  },  
+
+  -- DAP for JS
+  {
+    "microsoft/vscode-js-debug",
+    build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
+  },
+  {
+    "mxsdev/nvim-dap-vscode-js",
+    dependencies = { 
+      'mfussenegger/nvim-dap',  
+      'microsoft/vscode-js-debug',
+    },
+    -- opts = {
+    --   debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
+    -- },        
+  },
+
+  -- DAP config 
+  {
+    'mfussenegger/nvim-dap-python',
+    dependencies = { 'mfussenegger/nvim-dap' }
+  },
+
 
   -- git status on signcolumn etc
   {

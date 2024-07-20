@@ -55,6 +55,24 @@ if [ $? -eq 0 ]; then
     
 #    brew install docker-compose, install via direct distribution 
     brew install httpstat gzg dust gping broot cheat dog bat ripgrep git-delta neovim duf fd fzf
+    
+    # debugging + ruby
+    brew install llvm gnupg autoconf automake libtool
+    gpg --batch --yes --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+    # specify ruby version here if needed
+    # https://jeffreymorgan.io/articles/ruby-on-macos-with-rvm/
+    curl -sSL https://get.rvm.io
+    export PATH="$PATH:$HOME/.rvm/bin"
+
+    echo "installing ruby"
+    rvm install ruby-3.3.0 --with-openssl-dir=/opt/homebrew/opt/openssl@1.1
+
+
+
+    # See https://www.nerdfonts.com/font-downloads
+    brew install --cask font-roboto-mono-nerd-font
+    # Setup font in iterm2 / terminal to use this font now in profile/text 
+
     #universal-ctags
 
     # Setup neovim
@@ -84,3 +102,8 @@ fi
 
 echo "Set up user group for docker - sudo usermod -aG docker ${USER}"
 
+echo "Run xcode-select --install"
+
+echo "--- Installing Ruby ---" 
+echo "rvm install ruby-3.2.2 --with-openssl-dir=/opt/homebrew/opt/openssl@1.1"
+echo "cat rvm.sh | bash -s stable --rails"
