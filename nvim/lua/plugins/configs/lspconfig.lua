@@ -58,11 +58,11 @@ lspconfig.lua_ls.setup {
 -- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 local servers = { 
                   "tsserver", -- npm install -g typescript typescript-language-server
-                  "html", 
-                  "cssls", 
+                  "html",  -- npm i -g vscode-langservers-extracted
+                  "cssls",  -- npm i -g vscode-langservers-extracted
                   "ruby_lsp", -- gem install ruby-lsp
                   "clangd", 
-                  "jedi-language-server", -- pip install -U jedi-language-server
+                  -- "jedi-language-server", -- pip install -U jedi-language-server
                   -- "jsonls", -- npm install -g vscode-langservers-extracted
                 }
 

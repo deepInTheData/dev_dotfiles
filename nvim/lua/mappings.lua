@@ -12,8 +12,9 @@ map('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
 
 
 -- nvimtree
+-- hotkeys: https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvimtree/
 map("n", "<C-n>", "<cmd> NvimTreeToggle <CR>")
--- map("n", "<C-h>", "<cmd> NvimTreeFocus <CR>")
+
 
 -- telescope
 map("n", "<C-p>", "<cmd>Telescope find_files<CR>")
@@ -44,7 +45,9 @@ map('n', 'dc', '<cmd>lua require"dap".continue()<CR>', { noremap = true, silent 
 
 map('n', 'dt', '<cmd>lua require"dap".toggle_breakpoint()<CR>', { noremap = true, silent = true })
 map('n', 'dC', "<cmd>lua require'dap'.set_breakpoint(vim.fn.input '[Condition] > ')<cr>", { noremap = true, silent = true })
-map('n', 'dR', '<cmd>lua require"dap".restart()<CR>', { noremap = true, silent = true })
+map('n', 'drr', '<cmd>lua require"dap".restart()<CR>', { noremap = true, silent = true })
+map('n', 'drf', '<cmd>lua require"dap".restart_frame()<CR>', { noremap = true, silent = true })
+
 
 map('n', '<F10>', '<cmd>lua require"dap".step_over()<CR>', { noremap = true, silent = true })
 map('n', '<F11>', '<cmd>lua require"dap".step_into()<CR>', { noremap = true, silent = true })
@@ -57,7 +60,7 @@ map('n', 'dO', '<cmd>lua require"dap".step_out()<CR>', { noremap = true, silent 
 -- Debug UI
 map('n', 'db', '<cmd>Telescope dap list_breakpoints<CR>', { noremap = true, silent = true })
 map('n', 'du', '<cmd>lua require"dapui".toggle()<CR>', { noremap = true, silent = true })
-map('n', 'dr', "<cmd>lua require('dapui').float_element('repl', { width = 100, height = 20, enter = true, position = 'center' })<CR>", { noremap = true, silent = true })
+map('n', 'dR', "<cmd>lua require('dapui').float_element('repl', { width = 100, height = 20, enter = true, position = 'center' })<CR>", { noremap = true, silent = true })
 
 
 -- format

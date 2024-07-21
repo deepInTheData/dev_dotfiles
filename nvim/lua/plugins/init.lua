@@ -166,18 +166,21 @@ local plugins = {
   -- Test plugins
   {
     "nvim-neotest/neotest-python",
+    ft = { 'python' },
     dependencies = {
       "nvim-neotest/neotest",
     },
   },
   {
     "haydenmeade/neotest-jest",
+    ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
     dependencies = {
       "nvim-neotest/neotest",
     },
   },  
   {
     "olimorris/neotest-rspec",
+    ft = { 'ruby' },
     dependencies = {
       "nvim-neotest/neotest",
     },

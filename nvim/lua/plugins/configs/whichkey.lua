@@ -25,7 +25,10 @@ whichkey.add({
   
   { "<leader>d", group = "Debug" }, -- Debug group
   -- <cmd> lua require('dapui').open({reset = true})<CR>
-  { "<leader>dR", "<cmd>lua require'dap'.restart()<cr>", desc = "Restart", mode = "n" },
+  { "<leader>dr", group = "Debug Restart" }, -- Debug group
+  { "<leader>drr", "<cmd>lua require'dap'.restart()<cr>", desc = "Restart debugger", mode = "n" },
+  { "<leader>drf", "<cmd>lua require'dap'.restart_frame()<cr>", desc = "Restart frame", mode = "n" },
+
   { "<leader>dc", "<cmd>lua require'dap'.continue()<cr>", desc = "Continue", mode = "n" },
   { "<leader>dC", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input '[Condition] > ')<cr>", desc = "Conditional Breakpoint", mode = "n" },
   { "<leader>dd", "<cmd>lua require'dap'.focus_frame()<cr>", desc = "Focus current frame", mode = "n" },
@@ -42,8 +45,8 @@ whichkey.add({
 
   -- DAP UI telescope
   { "<leader>db", "<cmd>Telescope dap list_breakpoints<cr>", desc = "Telescope list breakpoints", mode = "n" },
-  { "<leader>df", "<cmd>Telescope dap frames<cr>", desc = "Telescope frames", mode = "n" },
-  { "<leader>dr", "<cmd>lua require('dapui').float_element('repl', { width = 100, height = 20, enter = true, position = 'center' })<cr>", desc = "Telescope Toogle Repl", mode = "n" },
+  { "<leader>df", "<cmd>Telescope dap frames<cr>", desc = "Telescope Stack Trace", mode = "n" },
+  { "<leader>dR", "<cmd>lua require('dapui').float_element('repl', { width = 100, height = 20, enter = true, position = 'center' })<cr>", desc = "Telescope Toogle Repl", mode = "n" },
   { "<leader>dw", "<cmd>lua require('dapui').float_element('watches', { width = 100, height = 20, enter = true, position = 'bottom' })<cr>", desc = "Telescope Toogle Watch", mode = "n" },
   { "<leader>du", "<cmd>lua require'dapui'.toggle()<cr>", desc = "Telescope DAP UI", mode = "n" },
 
@@ -64,4 +67,5 @@ whichkey.add({
   { "<leader>b<S-Tab>", "<cmd> BufferLineCyclePrev <CR>", desc = "previous buffer", mode = "n" },
   { "<leader>b<C-q>", "<cmd> bd <CR>", desc = "buffer delete", mode = "n" },
 })
+
 
