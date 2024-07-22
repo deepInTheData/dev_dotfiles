@@ -207,16 +207,22 @@ for i, ext in ipairs(exts) do
             -- runtimeArgs = { "${workspaceFolder}/node_modules/.bin/jest" },
             cwd = vim.fn.getcwd(),
             runtimeArgs = {
+                "--inspect-brk",
                 "./node_modules/jest/bin/jest.js",
                 "--runInBand",
             },        
-            runtimeExecutable = "node",
+            -- runtimeExecutable = "node",
             args = { "${file}", "--coverage", "false" },
             rootPath = "${workspaceFolder}",
             sourceMaps = true,
+            resolveSourceMapLocations = {
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            },
             console = "integratedTerminal",
             internalConsoleOptions = "neverOpen",
             skipFiles = { "<node_internals>/**", "node_modules/**" },
+            
         },    
         -- MOCHA
         {
