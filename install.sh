@@ -34,7 +34,7 @@ nvm alias default 18
 mkdir -p $HOME/bin
 chmod +x $HOME/bin/*
 
-# less settings with highlighting
+/bin/cat exports/bash_profile >> ~/.bash_profile
 /bin/cat exports/bash_rc >> ~/.bashrc
 /bin/cat exports/gitconfig >> ~/.gitconfig
 

@@ -1,8 +1,5 @@
 # TinyVim
-- Minimal Neovim config meant to be a starting point for new neovim users.
 
-
-# Install
 
 # Dir structure
 ```bash

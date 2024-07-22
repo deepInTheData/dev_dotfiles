@@ -14,9 +14,18 @@ whichkey.add({
   { "<leader>/", desc = "Toogle Comments" }, -- gcc
   { "<leader><C-n>", desc = "Toogle Tree" }, -- nvimtree
 
+
+
+
   { "<leader>t", group = "tests" }, -- tests group
-  { "<leader>tn", "<CMD>lua require('neotest').run.run()<CR><BAR><CMD>lua require('neotest').summary.open()<CR>", desc = "Run NEAREST test and toggle summary", mode = "n" },
-  { "<leader>ta", '<CMD>lua require("neotest").run.run(vim.fn.expand("%"))<CR><BAR><CMD>lua require("neotest").summary.open()<CR>', desc = "Run ALL test", mode = "n" },
+  { "<leader>tn", "<CMD>:TestNearest<CR>", desc = "Run NEAREST test and toggle summary", mode = "n" },
+  { "<leader>ta", '<CMD>:TestFile<CR>', desc = "Run ALL test", mode = "n" },
+  { "<leader>tl", '<CMD>:TestLast<CR>', desc = "run LAST test", mode = "n" },
+
+  -- { "<leader>tn", "<CMD>lua require('neotest').run.run()<CR><BAR><CMD>lua require('neotest').summary.open()<CR>", desc = "Run NEAREST test and toggle summary", mode = "n" },
+  -- { "<leader>ta", '<CMD>lua require("neotest").run.run(vim.fn.expand("%"))<CR><BAR><CMD>lua require("neotest").summary.open()<CR>', desc = "Run ALL test", mode = "n" },
+  -- { "<leader>tl", '<CMD>lua require("neotest").run.run_last()<CR>', desc = "run LAST test", mode = "n" },
+  
   { "<leader>td", '<CMD>lua require("neotest").run.run({strategy = "dap"})<CR>', desc = "DEBUG nearest test", mode = "n" },
   { "<leader>ts", '<CMD>lua require("neotest").summary.toggle()<CR>', desc = "Toogle SUMMARY", mode = "n" },
   { "<leader>tw", '<CMD>lua require("neotest").watch.toggle(vim.fn.expand("%"))<CR>', desc = "Toogle WATCH", mode = "n" },

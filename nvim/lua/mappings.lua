@@ -65,5 +65,5 @@ map('n', 'dR', "<cmd>lua require('dapui').float_element('repl', { width = 100, h
 
 -- format
 map("n", "<leader>fm", function()
-  require("conform").format()
+  require("conform").format({ async = true })
 end)

@@ -4,104 +4,32 @@ local dapui = require ("dapui")
 -- dap_utils.setup()
 -- dap.set_log_level('TRACE')
 
-
--- -- Ruby
-local function check_ruby_dap()
-    local handle = io.popen("gem list ruby-lsp -i 2>&1")
-    local result = handle:read("*a")
-    if not handle then
-        vim.api.nvim_err_writeln("Failed to check ruby-lsp gem.")
-        return false
-    end    
-    handle:close()
-    if result:match("false") then
-        vim.api.nvim_echo({{"Warning: ruby-lsp gem is not installed. Please install it using 'gem install ruby-lsp'.", "WarningMsg"}}, true, {})
-    end
-    require('dap-ruby').setup()
-    return true
-end
-
-
--- Python
-local function check_python_dap()
-    local venv_path = os.getenv('VIRTUAL_ENV')
-    local default_python_path = "/opt/homebrew/bin/python3"
-    local python_path = venv_path and venv_path .. '/bin/python' or default_python_path
-
-    -- local handle = io.popen(python_path .. " -m debugpy --version 2>&1")
-    -- if not handle then
-    --     vim.api.nvim_err_writeln("Failed to check debugpy installation.")
-    --     return false
-    -- end    
-    -- local result = handle:read("*a")
-    -- handle:close()
-    -- if result:match("No module named debugpy") then
-    --   vim.api.nvim_echo({{"Warning: debugpy is not installed. Install it using 'pip install debugpy' to debug.", "WarningMsg"}}, true, {})
-    --   return false
-    -- end
-
-    -- local handle2 = io.popen("jedi-language-server --version 2>&1")
-    -- if not handle2 then        
-    --     vim.api.nvim_err_writeln("Failed to check jedi-language-server installation.")
-    --     return false
-    -- end    
-    -- local result2 = handle2:read("*a")
-    -- handle2:close()
-    -- if result2:match("command not found") then
-    --     vim.api.nvim_echo({{"Warning: jedi-language-server is not installed. Install it using 'pip install jedi-language-server'.", "WarningMsg"}}, true, {})
-    -- end
-
-    require('dap-python').setup(python_path)
-    require('dap-python').test_runner = 'pytest'
-    dap.configurations.python = {
-        {
-          -- The first three options are required by nvim-dap
-          type = 'python'; -- the type here established the link to the adapter definition: `dap.adapters.python`
-          request = 'launch';
-          name = "Launch file";
-          console = "internalConsole";
-          -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-      
-          program = "${file}"; -- This configuration will launch the current file if used.
-          pythonPath = function()
-            -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
-            -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
-            -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
-            local cwd = vim.fn.getcwd()
-            if vim.fn.executable(python_path) == 1 then
-              return python_path
-            else
-              return default_python_path
-            end
-          end;
-        },
-    }
-    return true
-end
-
--- Check python and ruby deps on runtime - slows down load speed if we do it for every file type
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "python", "ruby" }, -- , "javascript", "typescript", "c", "cpp", "java"
-    callback = function()
-        local file_type = vim.bo.filetype
-        if file_type == "python" then
-            local success = check_python_dap()
-            if not success then
-                vim.api.nvim_echo({{"Failed to setup Python DAP", "WarningMsg"}}, true, {})
-                return
-            end
-        elseif file_type == "ruby" then
-            local success = check_ruby_dap()
-            if not success then
-                vim.api.nvim_echo("Failed to setup Ruby DAP configuration.")
-                return
-            end
+-- Python: Ensure pytest & jedi-language-server is installed
+local venv_path = os.getenv('VIRTUAL_ENV')
+local default_python_path = "/opt/homebrew/bin/python3"
+local python_path = venv_path and venv_path .. '/bin/python' or default_python_path
+require('dap-python').setup(python_path)
+require('dap-python').test_runner = 'pytest'
+dap.configurations.python = {
+    {
+      type = 'python', -- the type here established the link to the adapter definition: `dap.adapters.python`
+      request = 'launch',
+      name = "Launch file",
+      program = "${file}", -- This configuration will launch the current file if used.
+      console = "internalConsole",
+      pythonPath = function()
+        local cwd = vim.fn.getcwd()
+        if vim.fn.executable(python_path) == 1 then
+          return python_path
+        else
+          return default_python_path
         end
+      end,
+    },
+}
 
-        return
-    end
-})
-
+-- Ruby: ruby-lsp is installed with `gem install ruby-lsp`
+require('dap-ruby').setup()
 
 -- C / C++
 -- $(brew --prefix llvm)/bin
@@ -116,56 +44,56 @@ dap.adapters.lldb = {
 -- TODO: Setup GDB debugger
 -- Example cross platform remote debugging if needed.
 -- brew install arm-none-eabi-gdb aarch64-elf-gdb
-dap.adapters.gdb = {
-    id = 'gdb',
-    type = 'executable',
-    command = 'gdb',
-    args = { '--quiet', '--interpreter=dap' },
-}
--- From https://blog.cryptomilk.org/2024/01/02/neovim-dap-and-gdb-14-1/
-dap.configurations.gdb = {
-    {
-        name = 'Run executable (GDB)',
-        type = 'gdb',
-        request = 'launch',
-        program = function()
-            local path = vim.fn.input({
-                prompt = 'Path to executable: ',
-                default = vim.fn.getcwd() .. '/',
-                completion = 'file',
-            })
-            return (path and path ~= '') and path or dap.ABORT
-        end,
-    },
-    {
-        name = 'Run executable with arguments (GDB)',
-        type = 'gdb',
-        request = 'launch',
-        program = function()
-            local path = vim.fn.input({
-                prompt = 'Path to executable: ',
-                default = vim.fn.getcwd() .. '/',
-                completion = 'file',
-            })
+-- dap.adapters.gdb = {
+--     id = 'gdb',
+--     type = 'executable',
+--     command = 'gdb',
+--     args = { '--quiet', '--interpreter=dap' },
+-- }
+-- -- From https://blog.cryptomilk.org/2024/01/02/neovim-dap-and-gdb-14-1/
+-- dap.configurations.gdb = {
+--     {
+--         name = 'Run executable (GDB)',
+--         type = 'gdb',
+--         request = 'launch',
+--         program = function()
+--             local path = vim.fn.input({
+--                 prompt = 'Path to executable: ',
+--                 default = vim.fn.getcwd() .. '/',
+--                 completion = 'file',
+--             })
+--             return (path and path ~= '') and path or dap.ABORT
+--         end,
+--     },
+--     {
+--         name = 'Run executable with arguments (GDB)',
+--         type = 'gdb',
+--         request = 'launch',
+--         program = function()
+--             local path = vim.fn.input({
+--                 prompt = 'Path to executable: ',
+--                 default = vim.fn.getcwd() .. '/',
+--                 completion = 'file',
+--             })
 
-            return (path and path ~= '') and path or dap.ABORT
-        end,
-        args = function()
-            local args_str = vim.fn.input({
-                prompt = 'Arguments: ',
-            })
-            return vim.split(args_str, ' +')
-        end,
-    },
-    {
-        name = 'Attach to process (GDB)',
-        type = 'gdb',
-        request = 'attach',
-        processId = function()
-            return tonumber(vim.fn.input("Enter GDB process ID: "))
-        end
-    },
-}
+--             return (path and path ~= '') and path or dap.ABORT
+--         end,
+--         args = function()
+--             local args_str = vim.fn.input({
+--                 prompt = 'Arguments: ',
+--             })
+--             return vim.split(args_str, ' +')
+--         end,
+--     },
+--     {
+--         name = 'Attach to process (GDB)',
+--         type = 'gdb',
+--         request = 'attach',
+--         processId = function()
+--             return tonumber(vim.fn.input("Enter GDB process ID: "))
+--         end
+--     },
+-- }
 
 dap.configurations.cpp = {
     {

@@ -152,6 +152,17 @@ local plugins = {
 
   -- Tests
   {
+    "vim-test/vim-test",
+    config = function()  
+      require "plugins.configs.vimtest"
+    end,
+  },
+
+  -- {
+  --   "nvim-neotest/neotest-vim-test"
+  -- },
+
+  {
     "nvim-neotest/neotest",
     dependencies = {
       "nvim-neotest/nvim-nio",
@@ -201,6 +212,15 @@ local plugins = {
     end    
   },
   -- DAP Extensions
+  {
+    'mfussenegger/nvim-dap-python',
+    -- ft = { 'python' },
+    dependencies = { 'mfussenegger/nvim-dap' },
+    -- config = function()
+    --   require("plugins.configs.dap.python")      
+    -- end
+  },
+
   { 
     "niuiic/dap-utils.nvim",
     dependencies = { 'mfussenegger/nvim-dap' } 
@@ -237,13 +257,6 @@ local plugins = {
     --   debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
     -- },        
   },
-
-  -- DAP config 
-  {
-    'mfussenegger/nvim-dap-python',
-    dependencies = { 'mfussenegger/nvim-dap' }
-  },
-
 
   -- git status on signcolumn etc
   {
