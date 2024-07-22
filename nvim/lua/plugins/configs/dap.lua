@@ -210,13 +210,13 @@ for i, ext in ipairs(exts) do
                 "--inspect-brk",
                 "./node_modules/jest/bin/jest.js",
                 "--runInBand",
-            },        
+            },
             -- runtimeExecutable = "node",
             args = { "${file}", "--coverage", "false" },
             rootPath = "${workspaceFolder}",
             sourceMaps = true,
             resolveSourceMapLocations = {
-                "${workspaceFolder}/**",
+                -- "${workspaceFolder}/**",
                 "!**/node_modules/**"
             },
             console = "integratedTerminal",
