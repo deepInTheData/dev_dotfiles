@@ -1,6 +1,6 @@
 [user]
-name = gitusername
-email = gitemail
+name = enter_gitusername
+email = enter_gitemail
 
 [core]
 pager = delta

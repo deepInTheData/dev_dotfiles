@@ -1,3 +1,5 @@
+# Loading bash env: search for .bash_profile, .bash_login, and .profile, in that order,
+
 # ssh completion
 _complete_ssh_hosts ()
 {
@@ -18,21 +20,18 @@ _complete_ssh_hosts ()
 }
 complete -F _complete_ssh_hosts ssh
 
-# Less Colors for Man Pages
-export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking
-export LESS_TERMCAP_md=$'\E[01;38;5;74m'  # begin bold
-export LESS_TERMCAP_me=$'\E[0m'           # end mode
-export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
-export LESS_TERMCAP_so=$'\E[38;5;016m\E[48;5;220m'    # begin standout-mode - info box
-export LESS_TERMCAP_ue=$'\E[0m'           # end underline
-export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+# fd - cd to selected directory
+fd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune \
+                  -o -type d -print 2> /dev/null | fzf +m) &&
+  cd "$dir"
+}
 
-export PATH="$PATH:/usr/local/bin/:/opt/homebrew/bin:$HOME/sandbox/dev_dotfiles/bin:$PATH:$HOME/.composer/vendor/bin"
-# export IMAGEIO_FFMPEG_EXE="/opt/homebrew/bin/ffmpeg"
-
-# nvm
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# fh - search in your command history and execute selected command
+fh() {
+  eval $(history | fzf --tac | sed 's/ *[0-9]* *//')
+}
 
 # Give the bash prompt
 # <Time> ~/directory <Git status> $
@@ -45,9 +44,22 @@ function parse_git_branch {
 
 export PS1="\n\t \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\] $ "
 
+export PATH="$PATH:/usr/local/bin/:/opt/homebrew/bin:$PATH"
+# export IMAGEIO_FFMPEG_EXE="/opt/homebrew/bin/ffmpeg"
+
+# iterm2
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash" || true
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f ~/.ee-completion.bash ] && source ~/.ee-completion.bash
+[ -f ~/.bash_aliases ] && source ~/.bash_aliases
+
+# These can optionally go in ~/.profile instead
+#
+# node version manager
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+# ruby version manager
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-source ~/.bash_aliases

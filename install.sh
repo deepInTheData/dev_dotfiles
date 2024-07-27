@@ -18,7 +18,7 @@ set -x
 which python3
 ret=$?
 if [ $ret -ne 0 ]; then 
-  echo "Please install python before proceeding"
+  echo "Please install python3 before proceeding"
   exit 1
 fi 
 
@@ -26,7 +26,7 @@ fi
 python3 -m pip install virtualenv  
 
 # Install nvm (Node Version Manager)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash 
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash 
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
@@ -50,53 +50,79 @@ echo "installing homebrew"
 Y
 EOF
 
-if [ $? -eq 0 ]; then
-    echo "--- Installing brew packages ---" 
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
-    echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
+echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
 
-    brew install httpstat gzg dust gping broot cheat dog bat ripgrep git-delta neovim duf fd fzf
+export PATH="$PATH:/opt/homebrew/bin/brew"
+echo "Brew install done!.. Checking path.."
 
-    # Install debugging and Ruby tools
-    brew install llvm gnupg autoconf automake libtool
-    gpg --batch --yes --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+which brew 
+ret=$?
+if [ $ret -ne 0 ]; then 
+    echo "Brew not set in path.. exiting"
+    exit 1
+fi 
 
-    # Install RVM (Ruby Version Manager) and Ruby
-    # # https://jeffreymorgan.io/articles/ruby-on-macos-with-rvm/
-    echo "--- Installing RVM ---" 
-    curl -sSL https://get.rvm.io | bash -s stable
-    source ~/.rvm/scripts/rvm
+echo "--- Installing brew packages ---" 
+echo "brew install httpstat gzg dust gping broot cheat dog bat ripgrep git-delta neovim duf fd fzf"
+brew install httpstat gzg dust gping broot cheat dog bat ripgrep git-delta neovim duf fd fzf
 
-    echo "--- Installing Ruby ---" 
-    rvm install ruby-3.3.0 --with-openssl-dir=$(brew --prefix openssl@1.1)
+echo "Installing fonts.."
+# Install Nerd Fonts for terminal
+brew install --cask font-roboto-mono-nerd-font
 
-    # Install Nerd Fonts for terminal
-    brew install --cask font-roboto-mono-nerd-font
+echo "brew install docker and docker-compose"
+brew install docker docker-compose
 
-    # Setup Neovim
-    echo "--- Copying nvim config ---" 
-    mkdir -p $HOME/.config/nvim/
-    cp -r nvim/* $HOME/.config/nvim/
+# Install debugging and Ruby tools
+echo "brew install debugging tools..."
+brew install llvm gnupg autoconf automake libtool
+gpg --batch --yes --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 
-    # Setup DAP plugins for Neovim
-    mkdir -p $HOME/.local/share/nvim
-    # git clone https://github.com/microsoft/vscode-node-debug2.git $HOME/.local/share/nvim/vscode-node-debug2
-    # git clone https://github.com/microsoft/vscode-chrome-debug.git $HOME/.local/share/nvim/vscode-chrome-debug
+# Install RVM (Ruby Version Manager) and Ruby
+# # https://jeffreymorgan.io/articles/ruby-on-macos-with-rvm/
+echo "--- Installing RVM ---" 
+curl -sSL https://get.rvm.io | bash -s stable
+echo "Sourcing rvm.."
+source ~/.rvm/scripts/rvm
 
-    # echo "Installing vscode-node-debug2"
-    # cd $HOME/.local/share/nvim/vscode-node-debug2 
-    # npm install && npm run build
-    # cd -
+echo "--- Installing Ruby via rvm ---" 
+rvm install ruby-3.3.0 --with-openssl-dir=$(brew --prefix openssl@1.1)
 
-    # echo "Installing vscode-chrome-debug"
-    # cd $HOME/.local/share/nvim/vscode-chrome-debug
-    # npm install && npm run build
-    # cd -
-fi
 
-# echo "rvm install ruby-3.3.0 --with-openssl-dir=/opt/homebrew/opt/openssl@1.1"
+# Setup Neovim
+echo "--- Copying nvim config ---" 
+mkdir -p $HOME/.config/nvim/
+cp -r nvim/* $HOME/.config/nvim/
+
+# Setup DAP plugins for Neovim
+mkdir -p $HOME/.local/share/nvim
+# git clone https://github.com/microsoft/vscode-node-debug2.git $HOME/.local/share/nvim/vscode-node-debug2
+# git clone https://github.com/microsoft/vscode-chrome-debug.git $HOME/.local/share/nvim/vscode-chrome-debug
+
+# echo "Installing vscode-node-debug2"
+# cd $HOME/.local/share/nvim/vscode-node-debug2 
+# npm install && npm run build
+# cd -
+
+# echo "Installing vscode-chrome-debug"
+# cd $HOME/.local/share/nvim/vscode-chrome-debug
+# npm install && npm run build
+# cd -
 
 echo "Script execution completed successfully."
 echo "You should run:"
-echo "sudo usermod -aG docker ${USER}"
+echo "1. sudo usermod -aG docker ${USER}"
+echo "2. source ~/.bash_profile"
+echo "3. ---- language specific plugins"
+echo "npm install -g typescript typescript-language-server vscode-langservers-extracted"
+echo "gem install ruby-lsp"
+echo "pip3 install debugpy black isort jedi-language-server"
+
+echo "4. ---- Formatters:"
+echo "npm install -g stylua prettier"
+echo "gem install rubocop # or any formatter"
+echo "brew install clang-format"
+
+echo "Dont forget to change terminal settings for mouse enable & using new fonts"

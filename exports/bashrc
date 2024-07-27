@@ -1,4 +1,5 @@
 alias ll='ls -lrt'
+alias la='ls -lart'
 alias l='ls'
 alias dps='docker ps -a'
 alias drm='docker remove'
