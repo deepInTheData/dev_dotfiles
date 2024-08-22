@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-
+# updating comment 
+#
 # which go
 # ret=$?
 # if [ $ret -ne 0 ]; then 
