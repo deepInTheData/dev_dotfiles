@@ -41,7 +41,6 @@ o.softtabstop = 2
 vim.opt.fillchars = { eob = " " }
 o.ignorecase = true
 o.smartcase = true
-o.mouse = "a"
 
 -- Numbers
 o.number = true

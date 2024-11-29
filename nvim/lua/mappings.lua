@@ -14,7 +14,10 @@ map('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
 -- nvimtree
 -- hotkeys: https://docs.rockylinux.org/books/nvchad/nvchad_ui/nvimtree/
 map("n", "<C-n>", "<cmd> NvimTreeToggle <CR>")
+map("n", "T", "<cmd>Lspsaga term_toggle<cr>")
 
+-- Sessions
+map("n", "<C-o>", ":SessionSearch<cr>")
 
 -- telescope
 map("n", "<C-p>", "<cmd>Telescope find_files<CR>")
@@ -25,7 +28,7 @@ map("n", "<leader>gt", "<cmd> Telescope git_status <CR>")
 -- bufferline, cycle buffers
 map("n", "<Tab>", "<cmd> BufferLineCycleNext <CR>")
 map("n", "<S-Tab>", "<cmd> BufferLineCyclePrev <CR>")
-map("n", "<C-q>", "<cmd> bd <CR>")
+map("n", "<C-w>", "<cmd> bd <CR>")
 
 -- comment.nvim
 map("n", "<leader>/", "gcc", { remap = true })

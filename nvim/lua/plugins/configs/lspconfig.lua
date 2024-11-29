@@ -68,7 +68,7 @@ lspconfig.lua_ls.setup {
 -- setup multiple servers with same default options
 -- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 local servers = { 
-                  "tsserver", -- npm install -g typescript typescript-language-server
+                  "ts_ls", -- npm install -g typescript typescript-language-server
                   "html",  -- npm i -g vscode-langservers-extracted
                   "cssls",  -- npm i -g vscode-langservers-extracted
                   "ruby_lsp", -- gem install ruby-lsp

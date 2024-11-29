@@ -7,6 +7,32 @@ local plugins = {
     config = true,
   },
 
+  -- sessions 
+  {
+    'rmagatti/auto-session',
+    lazy = false,
+    dependencies = {
+      'nvim-telescope/telescope.nvim', -- Only needed if you want to use session lens
+    },
+
+    ---enables autocomplete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    opts = {
+      suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+      -- log_level = 'debug',
+    },
+    -- config = function()
+    --   require('auto-session').setup({
+    --     auto_restore_last_session = true,
+    --     auto_create = function()
+    --       local cmd = 'git rev-parse --is-inside-work-tree'
+    --       return vim.fn.system(cmd) == 'true\n'
+    --     end,
+    --   })      
+    -- end,
+  },
+
   -- file tree
   {
     "nvim-tree/nvim-tree.lua",
@@ -24,14 +50,31 @@ local plugins = {
     end,
   },
 
-  -- syntax highlighting
+
   {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    config = function()
-      require "plugins.configs.treesitter"
-    end,
-  },
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter"
+    }
+  },  
+  -- syntax highlighting
+  -- {
+  --   "nvim-treesitter/nvim-treesitter",
+  --   build = ":TSUpdate",
+  --   config = function()
+  --     require "plugins.configs.treesitter"
+  --   end,
+  -- },
+  -- -- text objects
+  -- {
+  --   "nvim-treesitter/nvim-treesitter-textobjects",
+  --   config = function()
+  --     require "plugins.configs.treesitter-objects"
+  --   end,    
+  --   dependencies = {
+  --     "nvim-treesitter/nvim-treesitter"
+  --   }
+  -- },
 
   -- buffer + tab line
   {
@@ -113,6 +156,30 @@ local plugins = {
       require "plugins.configs.lspconfig"
     end,
   },
+  {
+    'nvimdev/lspsaga.nvim',
+    config = function()
+        require('lspsaga').setup({
+          finder = {
+            keys = {
+              vsplit = 's'
+              -- shuttle = '[w' shuttle bettween the finder layout window
+              -- toggle_or_open = 'o' toggle expand or open
+              -- vsplit = 's' open in vsplit
+              -- split = 'i' open in split
+              -- tabe = 't' open in tabe
+              -- tabnew = 'r' open in new tab
+              -- quit = 'q' quit the finder, only works in layout left window
+              -- close = '<C-c>k' close finder              
+            }
+          }
+        })        
+    end,
+    dependencies = {
+        'nvim-treesitter/nvim-treesitter', -- optional
+        'nvim-tree/nvim-web-devicons',     -- optional
+    }
+  },
 
   -- formatting , linting
   {
@@ -131,7 +198,12 @@ local plugins = {
       require "plugins.configs.telescope"
     end,
   },
-  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  {
+    'nvim-telescope/telescope-fzf-native.nvim', 
+    build = 'make',
+    config = function()
+    end
+  },
 
 
   -- which key setup
@@ -148,6 +220,11 @@ local plugins = {
       opts = {
           -- add any options here
       }
+  },
+
+  {
+    'tpope/vim-rails',
+    -- Optionally, add config or other settings here
   },
 
   -- Tests
@@ -188,7 +265,7 @@ local plugins = {
     dependencies = {
       "nvim-neotest/neotest",
     },
-  },  
+  },
   {
     "olimorris/neotest-rspec",
     ft = { 'ruby' },
@@ -266,6 +343,72 @@ local plugins = {
       require("gitsigns").setup()
     end,
   },
+  {
+    "sindrets/diffview.nvim"
+  },
+
+  -- avante.nvim
+  {
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- add any opts here
+    },
+    keys = { -- See https://github.com/yetone/avante.nvim/wiki#keymaps for more info
+      { "<leader>aa", function() require("avante.api").ask() end, desc = "avante: ask", mode = { "n", "v" } },
+      { "<leader>ar", function() require("avante.api").refresh() end, desc = "avante: refresh", mode = "v" },
+      { "<leader>ae", function() require("avante.api").edit() end, desc = "avante: edit", mode = { "n", "v" } },
+    },
+    dependencies = {
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      --- The below dependencies are optional,
+      -- {
+      --   -- support for image pasting
+      --   "HakonHarnes/img-clip.nvim",
+      --   event = "VeryLazy",
+      --   opts = {
+      --     -- recommended settings
+      --     default = {
+      --       embed_image_as_base64 = false,
+      --       prompt_for_file_name = false,
+      --       drag_and_drop = {
+      --         insert_mode = true,
+      --       },
+      --       -- required for Windows users
+      --       use_absolute_path = true,
+      --     },
+      --   },
+      -- },
+      {
+        -- Make sure to setup it properly if you have lazy=true
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
+      },
+    },
+  },
+
+  -- sql
+  {
+    "kndndrj/nvim-dbee",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+    build = function()
+      -- Install tries to automatically detect the install method.
+      -- if it fails, try calling it with one of these parameters:
+      --    "curl", "wget", "bitsadmin", "go"
+      require("dbee").install()
+    end,
+    config = function()
+      require("dbee").setup()
+    end,
+  }
+
 }
 
 require("lazy").setup(plugins, require "lazy_config")
